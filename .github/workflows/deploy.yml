@@ -28,6 +28,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: 배포 시크릿 확인
+        env:
+          KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          HOST: ${{ secrets.DEPLOY_HOST }}
+          USER: ${{ secrets.DEPLOY_USER }}
+          KNOWN: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          fail=
+          for name in KEY HOST USER KNOWN; do
+            if [ -z "${!name}" ]; then
+              echo "::error::시크릿 DEPLOY_${name} 이(가) 비어 있습니다. Settings → Secrets and variables → Actions 에서 등록하세요."
+              fail=1
+            fi
+          done
+          [ -z "$fail" ] || exit 1
+
       - name: SSH 키 준비
         run: |
           mkdir -p ~/.ssh
