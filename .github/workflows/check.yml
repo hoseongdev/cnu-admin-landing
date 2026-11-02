@@ -1,0 +1,33 @@
+name: Check
+
+# PR 과 main 푸시에서 내용을 검사합니다.
+# 시크릿을 쓰지 않으므로 포크에서 온 PR 에서도 안전하게 돕니다.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 자바스크립트 문법 검사
+        run: |
+          node --check data.js
+          node --check app.js
+
+      - name: data.js 내용 검사
+        run: node scripts/check-data.mjs
+
+      - name: 브라우저로 렌더링 확인
+        run: node scripts/render-check.mjs

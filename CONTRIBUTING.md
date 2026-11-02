@@ -3,11 +3,19 @@
 내용 수정은 **`data.js` 한 파일만** 고치면 됩니다. HTML은 건드릴 일이 거의 없습니다.
 어디를 고치면 어디가 바뀌는지는 [README.md](README.md)에 표로 정리돼 있습니다.
 
-## 순서
+## 가장 쉬운 방법 — 브라우저만으로
 
-1. 브랜치를 만듭니다.
+1. 깃헙에서 [`data.js`](data.js) 를 열고 **연필 아이콘**을 누릅니다.
+2. 고치고 **Commit changes** → *Create a new branch and start a pull request* 를 선택합니다.
+3. 포크·브랜치·PR이 자동으로 만들어집니다. 머지되면 사이트에 반영됩니다.
+
+## 터미널로 하는 방법
+
+1. 저장소를 **Fork** 한 뒤 내려받고 브랜치를 만듭니다.
 
    ```bash
+   gh repo fork hoseongdev/cnu-admin-landing --clone
+   cd cnu-admin-landing
    git switch -c edit/member-update
    ```
 
@@ -25,6 +33,14 @@
    ```
 
 5. PR을 올립니다. 머지되면 **1~2분 안에 사이트에 자동 반영됩니다.**
+
+   PR을 올리면 자동 검사가 돌아갑니다. 빨간불이 뜨면 `data.js` 문법이나
+   빠진 항목이 있다는 뜻이고, 어디가 문제인지 로그에 한국어로 나옵니다.
+   올리기 전에 직접 확인하려면:
+
+   ```bash
+   node scripts/check-data.mjs
+   ```
 
 ## 브랜치 이름
 
