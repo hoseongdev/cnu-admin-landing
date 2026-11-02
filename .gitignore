@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+._*
+
+# 로그
+*.log
+
+# 에디터
+.vscode/
+.idea/
+
+# 비밀정보 (실수 방지)
+*.key
+*.pem
+.env
+
+# 서버 실제 정보 (공개 리포에 올리지 않음)
+DEPLOY.local.md

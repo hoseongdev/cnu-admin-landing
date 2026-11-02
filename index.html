@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADMIN — 충남대학교</title>
+<meta name="description" content="충남대학교 시스템 관리 동아리 ADMIN">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 상단 고정 바 -->
+<div class="topbar">
+  <div class="wrap topbar__inner">
+    <a class="topbar__mark" href="#top" data-site="name">ADMIN</a>
+    <nav class="topbar__nav" aria-label="섹션 바로가기">
+      <ul data-site="nav"></ul>
+    </nav>
+  </div>
+</div>
+
+<!-- 1. 머리말 -->
+<header class="masthead" id="top">
+  <div class="wrap">
+    <p class="masthead__affil" data-site="affiliation"></p>
+    <h1 class="masthead__name" data-site="name"></h1>
+    <p class="masthead__tagline" data-site="tagline"></p>
+  </div>
+</header>
+
+<main>
+
+  <!-- 2. 소개 -->
+  <section class="section section--about" id="about">
+    <div class="wrap grid-split">
+      <div class="col-label">
+        <p class="label"><span class="label__num">01</span><span data-about="label"></span></p>
+      </div>
+      <div class="col-body">
+        <h2 class="h2" data-about="heading"></h2>
+        <div class="prose" data-about="paragraphs"></div>
+        <dl class="activities" data-about="activities"></dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 임원진 -->
+  <section class="section section--members" id="members">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="label"><span class="label__num">02</span><span data-members="label"></span></p>
+        <h2 class="h2" data-members="heading"></h2>
+        <p class="section__note" data-members="note"></p>
+      </div>
+      <ul class="roster" data-members="list"></ul>
+    </div>
+  </section>
+
+  <!-- 4. 올해 행사 -->
+  <section class="section section--events" id="events">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="label"><span class="label__num">03</span><span data-events="label"></span></p>
+        <h2 class="h2" data-events="heading"></h2>
+      </div>
+      <ul class="events" data-events="list"></ul>
+    </div>
+  </section>
+
+</main>
+
+<!-- 5. 연락처 -->
+<footer class="footer" id="contact">
+  <div class="wrap">
+    <div class="section__head">
+      <p class="label"><span class="label__num">04</span><span data-contact="label"></span></p>
+      <h2 class="h2 h2--footer" data-contact="heading"></h2>
+      <p class="section__note" data-contact="note"></p>
+    </div>
+    <div class="footer__cols">
+      <dl class="contact-list" data-contact="details"></dl>
+      <dl class="contact-list" data-contact="links"></dl>
+    </div>
+    <p class="footer__copy"><span data-contact="copyright"></span></p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

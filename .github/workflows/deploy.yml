@@ -1,0 +1,56 @@
+name: Deploy
+
+# main 에 사이트 파일이 바뀌면 서버로 자동 배포합니다.
+# 포크에서 올라온 PR 에는 시크릿이 전달되지 않으므로 배포가 돌지 않습니다.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'data.js'
+      - 'style.css'
+      - 'app.js'
+      - 'images/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SSH 키 준비
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: 서버로 업로드
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            index.html data.js style.css app.js images \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/"
+
+      - name: 배포 확인
+        run: |
+          sleep 3
+          code=$(curl -s -o /dev/null -w '%{http_code}' https://cnu-admin.com)
+          title=$(curl -s https://cnu-admin.com | grep -o '<title>[^<]*</title>')
+          echo "HTTP $code / $title"
+          test "$code" = "200"
+
+      - name: 키 삭제
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
