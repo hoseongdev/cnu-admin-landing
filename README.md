@@ -25,7 +25,7 @@ python3 -m http.server 8000     # http://localhost:8000
 
 ## data.js에서 뭘 고치면 어디가 바뀌나
 
-### `site`, `next` — 첫 화면 / 고정 바
+### `site` — 첫 화면 / 고정 바
 
 | 항목 | 바뀌는 곳 |
 | --- | --- |
@@ -34,7 +34,6 @@ python3 -m http.server 8000     # http://localhost:8000
 | `site.tagline` | 큰 글자 아래, 가로선 밑 한 줄 소개 |
 | `site.cta` | 첫 화면 버튼. `label`은 글자, `href`는 이동할 곳 |
 | `site.nav` | 오른쪽 위 메뉴. `href`는 `index.html`의 `id`와 같아야 합니다 (`#about`, `#activities`, `#events`, `#awards`, `#members`, `#join`) |
-| `next` | 첫 화면의 "다가오는 행사". **`until` 날짜가 지나면 자동으로 사라집니다.** 항목을 통째로 지워도 됩니다 |
 
 ### `about` — 01 소개
 

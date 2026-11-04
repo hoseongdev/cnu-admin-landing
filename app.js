@@ -99,19 +99,6 @@
     });
   }
 
-  /* 다가오는 행사. until 날짜가 지나면 나오지 않습니다. */
-  function renderNext(next) {
-    if (!next) return;
-    const end = lastDay(next.until);
-    if (end && end < new Date()) return;
-
-    $$("[data-next-text]").forEach((node) => {
-      node.textContent = next[node.dataset.nextText] || "";
-    });
-    fillLink($("[data-next-link]"), next.link);
-    $("[data-next]").hidden = false;
-  }
-
   /* ── 2. 소개 ──────────────────────────────── */
   function renderAbout(about) {
     bindText("about", about);
@@ -273,7 +260,6 @@
   }
 
   renderSite(DATA.site);
-  renderNext(DATA.next);
   renderAbout(DATA.about);
   renderActivities(DATA.activities);
   renderEvents(DATA.events);

@@ -126,44 +126,6 @@ a:focus-visible,
 }
 .btn:hover { background: var(--ink-2); }
 
-/* 다가오는 행사 */
-.next {
-  margin-top: clamp(40px, 7vh, 72px);
-  padding: 22px 0;
-  border-top: 2px solid var(--ink);
-  border-bottom: 1px solid var(--line);
-}
-.next[hidden] { display: none; }
-.next__label { font-size: 0.75rem; font-weight: 500; color: var(--ink-3); letter-spacing: 0.12em; }
-.next__title {
-  margin-top: 6px;
-  font-size: clamp(1.375rem, 2.6vw, 1.875rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-.next__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 14px;
-  margin-top: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-.next__desc {
-  margin-top: 10px;
-  max-width: 60ch;
-  font-size: 0.875rem;
-  font-weight: 300;
-  color: var(--ink-2);
-}
-.next__link {
-  display: inline-block;
-  margin-top: 12px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border-bottom: 1px solid var(--ink);
-}
-
 /* ── 섹션 공통 ──────────────────────────────── */
 .section {
   padding: var(--sec-pad) 0;

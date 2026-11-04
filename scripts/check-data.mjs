@@ -64,9 +64,6 @@ for (const nav of DATA.site?.nav ?? []) {
   if (!e.title) fail(`events.list[${i}] 에 title 이 없습니다.`);
   if (!e.date) warn(`events.list[${i}] (${e.title ?? "?"}) 에 date 가 없습니다.`);
 });
-if (DATA.next && (!DATA.next.title || !DATA.next.link?.href)) {
-  fail("next 에 title 이나 link.href 가 없습니다.");
-}
 
 /* 5. 사진 경로가 실제 파일과 맞는지 (가장 흔한 실수) */
 const images = [
