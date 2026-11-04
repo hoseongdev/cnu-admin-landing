@@ -92,14 +92,21 @@
   }
 
   /* ── 3. 임원진 ────────────────────────────── */
+  function columnsFor(n) {
+    if (n <= 4) return n;
+    for (const cols of [4, 3, 5]) if (n % cols === 0) return cols;
+    return n <= 7 ? 4 : 5;
+  }
+
   function renderMembers(members) {
     bindText("members", members);
 
     const list = $('[data-members="list"]');
 
-    /* 인원 수에 맞춰 열 수를 정합니다. 4명 이하면 한 줄, 5명 이상이면 두 줄. */
-    const n = members.list.length;
-    list.style.setProperty("--cols", n <= 4 ? n : Math.ceil(n / 2));
+    /* 인원 수에 맞춰 열 수를 정합니다.
+       4명 이하면 한 줄, 그 이상이면 줄이 딱 떨어지는 열 수를 고릅니다.
+       (예: 6명 → 3열, 8명 → 4열, 9명 → 3열) */
+    list.style.setProperty("--cols", columnsFor(members.list.length));
 
     members.list.forEach((m) => {
       const li = el("li");
