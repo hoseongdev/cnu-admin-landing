@@ -115,9 +115,8 @@ a:focus-visible,
   height: 17px;
 }
 .logo--mast {                   /* 첫 화면 */
-  /* 원본이 836px 폭이라 이보다 크게 키우면 흐려집니다.
-     더 큰 로고 파일(SVG 또는 2000px 이상)로 바꾸면 값을 키워도 됩니다. */
-  width: clamp(220px, 40vw, 520px);
+  /* SVG 라서 아무리 키워도 흐려지지 않습니다. */
+  width: clamp(240px, 60vw, 900px);
   max-width: 100%;
 }
 .masthead__name:has(.logo) {    /* 로고가 들어가면 글자용 여백은 쓰지 않음 */

@@ -11,7 +11,7 @@ const DATA = {
   site: {
     name: "ADMIN",
     // 'ADMIN' 글자 대신 쓸 로고. 비워 두면 글자로 나옵니다.
-    logo: "images/admin-logo.png",
+    logo: "images/admin-logo.svg",
     // 이름 옆 작은 글씨 (학교/소속)
     affiliation: "충남대학교 컴퓨터인공지능학부",
     // 한 줄 소개. 페이지 최상단 큰 문장.
