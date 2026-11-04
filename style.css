@@ -61,14 +61,13 @@ a:focus-visible,
 }
 .topbar__inner {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 24px;
   height: 54px;
+  padding-top: 17px;
 }
 .topbar__mark {
-  display: flex;
-  align-items: center;
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.14em;
@@ -102,26 +101,6 @@ a:focus-visible,
   line-height: 0.86;
   letter-spacing: -0.045em;
   margin-left: -0.035em;        /* 좌측 광학 정렬 */
-}
-
-/* ── 로고 ───────────────────────────────────── */
-/* 'ADMIN' 글자 자리에 들어가는 이미지. 배경이 투명한 PNG. */
-.logo {
-  display: block;
-  width: auto;
-  height: auto;
-}
-.logo--mark {                   /* 상단 고정 바 */
-  height: 17px;
-}
-.logo--mast {                   /* 첫 화면 */
-  /* SVG 라서 아무리 키워도 흐려지지 않습니다. */
-  width: clamp(240px, 60vw, 900px);
-  max-width: 100%;
-}
-.masthead__name:has(.logo) {    /* 로고가 들어가면 글자용 여백은 쓰지 않음 */
-  margin-left: 0;
-  line-height: 1;
 }
 .masthead__tagline {
   margin-top: clamp(26px, 5vh, 52px);
@@ -513,8 +492,7 @@ a:focus-visible,
 
 @media (max-width: 560px) {
   body { font-size: 15px; }
-  .topbar__inner { height: 50px; }
-  .logo--mark { height: 15px; }
+  .topbar__inner { height: 50px; padding-top: 15px; }
   .topbar__nav ul { gap: 11px; }
   .topbar__nav a { font-size: 0.75rem; }
   .award { grid-template-columns: 48px minmax(0, 1fr); }

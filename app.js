@@ -84,16 +84,6 @@
     bindText("site", site);
     document.title = `${site.name} — ${site.affiliation}`;
 
-    /* 'ADMIN' 만 단독으로 들어가는 자리는 로고 이미지로 바꿉니다.
-       data.js 의 site.logo 를 비우면 글자로 돌아갑니다. */
-    $$("[data-site-logo]").forEach((slot) => {
-      if (!site.logo) { slot.textContent = site.name; return; }
-      const img = el("img", `logo logo--${slot.dataset.siteLogo}`);
-      img.src = site.logo;
-      img.alt = site.name;
-      slot.appendChild(img);
-    });
-
     const cta = $("[data-site-cta]");
     if (site.cta) fillLink(cta, site.cta);
     else cta.remove();
