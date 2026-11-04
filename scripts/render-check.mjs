@@ -24,22 +24,35 @@ if (!chrome) {
   process.exit(1);
 }
 
+/* 크롬이 왜 안 떴는지 알 수 있도록 오류 출력을 모아 둡니다. */
+let chromeLog = "";
 const proc = spawn(chrome, [
-  "--headless=new", "--disable-gpu", "--no-sandbox", "--hide-scrollbars",
+  "--headless=new", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage",
+  "--hide-scrollbars",
   `--remote-debugging-port=${PORT}`,
   `--user-data-dir=${fs.mkdtempSync(path.join(os.tmpdir(), "render-check-"))}`,
   "about:blank",
-], { stdio: "ignore" });
+], { stdio: ["ignore", "ignore", "pipe"] });
+proc.stderr.on("data", (c) => { chromeLog += c.toString(); });
+proc.on("error", (e) => { chromeLog += `실행 실패: ${e.message}\n`; });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/* 디버깅 포트가 열릴 때까지 대기 */
+/* 디버깅 포트가 열릴 때까지 대기 (느린 CI 러너를 감안해 최대 45초) */
 let tabs;
-for (let i = 0; i < 40; i++) {
+for (let i = 0; i < 180; i++) {
   await sleep(250);
-  try { tabs = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json(); break; } catch {}
+  try {
+    const list = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
+    if (list.some((t) => t.type === "page")) { tabs = list; break; }
+  } catch {}
 }
-if (!tabs) { proc.kill(); console.error("✗ 크롬이 뜨지 않았습니다."); process.exit(1); }
+if (!tabs) {
+  proc.kill();
+  console.error(`✗ 크롬이 뜨지 않았습니다. (경로: ${chrome})`);
+  if (chromeLog.trim()) console.error(chromeLog.trim().split("\n").slice(-10).map((l) => `  ${l}`).join("\n"));
+  process.exit(1);
+}
 
 const ws = new WebSocket(tabs.find((t) => t.type === "page").webSocketDebuggerUrl);
 let id = 0;
