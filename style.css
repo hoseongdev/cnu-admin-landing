@@ -267,16 +267,10 @@ a:focus-visible,
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  filter: grayscale(1) contrast(1.03);
-  transition: filter .55s ease, opacity .3s ease;
+  transition: opacity .3s ease;
 }
 .ph img.is-loaded { opacity: 1; }
 .ph.is-filled::after { content: none; }   /* 사진이 들어오면 파일명 숨김 */
-
-@media (hover: hover) {
-  .events > li:hover .ph img,
-  .activity-card:hover .ph img { filter: grayscale(0) contrast(1); }
-}
 
 /* ── 6. 운영진 (조직도) ─────────────────────── */
 /* 사진 없이 선과 글자 굵기만으로 위계를 만듭니다. */
