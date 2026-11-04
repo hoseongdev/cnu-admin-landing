@@ -73,7 +73,9 @@ const found = await read(`JSON.stringify({
   title: document.title,
   nav: document.querySelectorAll('.topbar__nav a').length,
   paragraphs: document.querySelectorAll('.prose p').length,
-  members: document.querySelectorAll('.roster > li').length,
+  lead: document.querySelectorAll('.org__lead > li').length,
+  departments: document.querySelectorAll('.dept').length,
+  members: document.querySelectorAll('.org__lead > li, .dept__people > li').length,
   events: document.querySelectorAll('.events > li').length,
   contacts: document.querySelectorAll('.contact-list > div').length,
   overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth
@@ -93,7 +95,7 @@ console.log(`렌더링 결과: ${JSON.stringify(found)}`);
 
 const problems = [];
 if (errors.length) problems.push(`자바스크립트 오류 — ${errors.join(" / ")}`);
-for (const [key, label] of [["nav", "네비게이션"], ["members", "임원진"], ["events", "행사"], ["contacts", "연락처"], ["paragraphs", "소개 문단"]]) {
+for (const [key, label] of [["nav", "네비게이션"], ["lead", "대표 운영진"], ["departments", "부서"], ["members", "임원진"], ["events", "행사"], ["contacts", "연락처"], ["paragraphs", "소개 문단"]]) {
   if (found[key] === 0) problems.push(`${label} 가 하나도 그려지지 않았습니다.`);
 }
 if (!found.title) problems.push("문서 제목이 비어 있습니다.");

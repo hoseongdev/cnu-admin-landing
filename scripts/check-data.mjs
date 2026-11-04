@@ -24,7 +24,8 @@ const need = {
   "site.name": DATA.site?.name,
   "site.tagline": DATA.site?.tagline,
   "about.heading": DATA.about?.heading,
-  "members.list": DATA.members?.list,
+  "members.lead": DATA.members?.lead,
+  "members.departments": DATA.members?.departments,
   "events.list": DATA.events?.list,
   "contact.details": DATA.contact?.details,
 };
@@ -42,9 +43,17 @@ for (const nav of DATA.site?.nav ?? []) {
 }
 
 /* 4. 임원진·행사 필수 필드 */
-(DATA.members?.list ?? []).forEach((m, i) => {
-  if (!m.name) fail(`members.list[${i}] 에 name 이 없습니다.`);
-  if (!m.role) fail(`members.list[${i}] (${m.name ?? "?"}) 에 role 이 없습니다.`);
+(DATA.members?.lead ?? []).forEach((m, i) => {
+  if (!m.name) fail(`members.lead[${i}] 에 name 이 없습니다.`);
+  if (!m.role) fail(`members.lead[${i}] (${m.name ?? "?"}) 에 role 이 없습니다.`);
+});
+(DATA.members?.departments ?? []).forEach((d, i) => {
+  if (!d.name) fail(`members.departments[${i}] 에 부서 이름(name)이 없습니다.`);
+  if (!d.people?.length) fail(`${d.name ?? `부서 ${i}`} 에 people 이 비어 있습니다.`);
+  (d.people ?? []).forEach((p, j) => {
+    if (!p.name) fail(`${d.name} 의 people[${j}] 에 name 이 없습니다.`);
+    if (!p.role) fail(`${d.name} 의 ${p.name ?? "?"} 에 role 이 없습니다.`);
+  });
 });
 (DATA.events?.list ?? []).forEach((e, i) => {
   if (!e.title) fail(`events.list[${i}] 에 title 이 없습니다.`);
@@ -55,10 +64,9 @@ for (const nav of DATA.site?.nav ?? []) {
 });
 
 /* 5. 사진 경로가 실제 파일과 맞는지 (가장 흔한 실수) */
-const images = [
-  ...(DATA.members?.list ?? []).map((m) => [m.image, `임원진 ${m.name}`]),
-  ...(DATA.events?.list ?? []).map((e) => [e.image, `행사 ${e.title}`]),
-].filter(([src]) => src);
+const images = (DATA.events?.list ?? [])
+  .map((e) => [e.image, `행사 ${e.title}`])
+  .filter(([src]) => src);
 
 for (const [src, who] of images) {
   if (!fs.existsSync(path.join(root, src))) {
@@ -68,7 +76,9 @@ for (const [src, who] of images) {
 
 /* 결과 */
 const counts = {
-  임원진: DATA.members?.list?.length ?? 0,
+  대표운영진: DATA.members?.lead?.length ?? 0,
+  부서: DATA.members?.departments?.length ?? 0,
+  부서원: (DATA.members?.departments ?? []).reduce((n, d) => n + (d.people?.length ?? 0), 0),
   행사: DATA.events?.list?.length ?? 0,
   소개문단: DATA.about?.paragraphs?.length ?? 0,
 };

@@ -91,35 +91,41 @@
     about.activities.forEach((item) => dl.appendChild(row(item.title, item.desc)));
   }
 
-  /* ── 3. 임원진 ────────────────────────────── */
-  function columnsFor(n) {
-    if (n <= 4) return n;
-    for (const cols of [4, 3, 5]) if (n % cols === 0) return cols;
-    return n <= 7 ? 4 : 5;
+  /* ── 3. 임원진 (조직도) ──────────────────── */
+  function person(p, cls) {
+    const li = el("li", cls);
+    const head = el("p", `${cls}__head`);
+    head.appendChild(el("span", `${cls}__name`, p.name));
+    head.appendChild(el("span", `${cls}__role`, p.role));
+    li.appendChild(head);
+    if (p.year) li.appendChild(el("p", `${cls}__year`, p.year));
+    if (p.bio) li.appendChild(el("p", `${cls}__bio`, p.bio));
+    return li;
   }
 
   function renderMembers(members) {
     bindText("members", members);
 
-    const list = $('[data-members="list"]');
+    /* 위쪽: 대표 운영진 */
+    const lead = $('[data-members="lead"]');
+    const leadList = members.lead ?? [];
+    lead.style.setProperty("--cols", Math.min(leadList.length || 1, 4));
+    leadList.forEach((m) => lead.appendChild(person(m, "lead")));
 
-    /* 인원 수에 맞춰 열 수를 정합니다.
-       4명 이하면 한 줄, 그 이상이면 줄이 딱 떨어지는 열 수를 고릅니다.
-       (예: 6명 → 3열, 8명 → 4열, 9명 → 3열) */
-    list.style.setProperty("--cols", columnsFor(members.list.length));
+    /* 아래쪽: 부서별 */
+    const depts = $('[data-members="departments"]');
+    (members.departments ?? []).forEach((d) => {
+      const row = el("div", "dept");
+      const head = el("div", "dept__label");
+      head.appendChild(el("h3", "dept__name", d.name));
+      if (d.desc) head.appendChild(el("p", "dept__desc", d.desc));
+      row.appendChild(head);
 
-    members.list.forEach((m) => {
-      const li = el("li");
-      li.appendChild(figure(m.image, `${m.name} ${m.role}`));
+      const people = el("ul", "dept__people");
+      (d.people ?? []).forEach((p) => people.appendChild(person(p, "mem")));
+      row.appendChild(people);
 
-      const text = el("div", "roster__text");
-      text.appendChild(el("p", "roster__role", m.role));
-      text.appendChild(el("p", "roster__name", m.name));
-      if (m.year) text.appendChild(el("p", "roster__year", m.year));
-      if (m.bio)  text.appendChild(el("p", "roster__bio", m.bio));
-
-      li.appendChild(text);
-      list.appendChild(li);
+      depts.appendChild(row);
     });
   }
 
