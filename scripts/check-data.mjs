@@ -24,6 +24,11 @@ const need = {
   "site.name": DATA.site?.name,
   "site.tagline": DATA.site?.tagline,
   "about.heading": DATA.about?.heading,
+  "about.letters": DATA.about?.letters,
+  "activities.groups": DATA.activities?.groups,
+  "awards.list": DATA.awards?.list,
+  "join.steps": DATA.join?.steps,
+  "join.cta": DATA.join?.cta?.href,
   "members.lead": DATA.members?.lead,
   "members.departments": DATA.members?.departments,
   "events.list": DATA.events?.list,
@@ -58,15 +63,17 @@ for (const nav of DATA.site?.nav ?? []) {
 (DATA.events?.list ?? []).forEach((e, i) => {
   if (!e.title) fail(`events.list[${i}] 에 title 이 없습니다.`);
   if (!e.date) warn(`events.list[${i}] (${e.title ?? "?"}) 에 date 가 없습니다.`);
-  if (e.size && !["lg", "md", "side", "sm"].includes(e.size)) {
-    fail(`events.list[${i}] 의 size "${e.size}" 는 쓸 수 없습니다. lg / md / side / sm 중에서 고르세요.`);
-  }
 });
+if (DATA.next && (!DATA.next.title || !DATA.next.link?.href)) {
+  fail("next 에 title 이나 link.href 가 없습니다.");
+}
 
 /* 5. 사진 경로가 실제 파일과 맞는지 (가장 흔한 실수) */
-const images = (DATA.events?.list ?? [])
-  .map((e) => [e.image, `행사 ${e.title}`])
-  .filter(([src]) => src);
+const images = [
+  ...(DATA.activities?.groups ?? []).flatMap((g) => g.items ?? [])
+    .flatMap((a) => (a.images ?? [a.image]).map((src) => [src, `활동 ${a.title}`])),
+  ...(DATA.events?.list ?? []).map((e) => [e.image, `행사 ${e.title}`]),
+].filter(([src]) => src);
 
 for (const [src, who] of images) {
   if (!fs.existsSync(path.join(root, src))) {
@@ -80,6 +87,7 @@ const counts = {
   부서: DATA.members?.departments?.length ?? 0,
   부서원: (DATA.members?.departments ?? []).reduce((n, d) => n + (d.people?.length ?? 0), 0),
   행사: DATA.events?.list?.length ?? 0,
+  성과: DATA.awards?.list?.length ?? 0,
   소개문단: DATA.about?.paragraphs?.length ?? 0,
 };
 console.log(`읽은 내용: ${Object.entries(counts).map(([k, v]) => `${k} ${v}개`).join(", ")}`);
