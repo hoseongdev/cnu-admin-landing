@@ -3,6 +3,7 @@
 
 import { spawn } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -26,7 +27,7 @@ if (!chrome) {
 const proc = spawn(chrome, [
   "--headless=new", "--disable-gpu", "--no-sandbox", "--hide-scrollbars",
   `--remote-debugging-port=${PORT}`,
-  `--user-data-dir=${fs.mkdtempSync("/tmp/render-check-")}`,
+  `--user-data-dir=${fs.mkdtempSync(path.join(os.tmpdir(), "render-check-"))}`,
   "about:blank",
 ], { stdio: "ignore" });
 
@@ -77,6 +78,10 @@ const found = await read(`JSON.stringify({
   departments: document.querySelectorAll('.dept').length,
   members: document.querySelectorAll('.org__lead > li, .dept__people > li').length,
   events: document.querySelectorAll('.events > li').length,
+  letters: document.querySelectorAll('.letters > li').length,
+  activities: document.querySelectorAll('.activity-group').length,
+  awards: document.querySelectorAll('.awards > li').length,
+  steps: document.querySelectorAll('.steps > li').length,
   contacts: document.querySelectorAll('.contact-list > div').length,
   overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth
 })`);
@@ -95,7 +100,7 @@ console.log(`렌더링 결과: ${JSON.stringify(found)}`);
 
 const problems = [];
 if (errors.length) problems.push(`자바스크립트 오류 — ${errors.join(" / ")}`);
-for (const [key, label] of [["nav", "네비게이션"], ["lead", "대표 운영진"], ["departments", "부서"], ["members", "임원진"], ["events", "행사"], ["contacts", "연락처"], ["paragraphs", "소개 문단"]]) {
+for (const [key, label] of [["nav", "네비게이션"], ["lead", "대표 운영진"], ["departments", "부서"], ["members", "임원진"], ["events", "행사"], ["letters", "ADMIN 다섯 글자"], ["activities", "활동"], ["awards", "성과"], ["steps", "가입 안내"], ["contacts", "연락처"], ["paragraphs", "소개 문단"]]) {
   if (found[key] === 0) problems.push(`${label} 가 하나도 그려지지 않았습니다.`);
 }
 if (!found.title) problems.push("문서 제목이 비어 있습니다.");

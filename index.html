@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ADMIN — 충남대학교 컴퓨터융합학부</title>
-<meta name="description" content="웹, 서버, AI를 직접 만들고 가르치는 충남대학교 컴퓨터융합학부 학술 동아리입니다.">
+<title>ADMIN — 충남대학교 컴퓨터인공지능학부</title>
+<meta name="description" content="웹과 AI를 직접 만들고 가르치는 충남대학교 컴퓨터인공지능학부 학술 동아리입니다.">
 
 <!-- 카카오톡·메신저·SNS 링크 미리보기 -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ADMIN">
-<meta property="og:title" content="ADMIN — 충남대학교 컴퓨터융합학부">
-<meta property="og:description" content="웹, 서버, AI를 직접 만들고 가르치는 충남대학교 컴퓨터융합학부 학술 동아리입니다.">
+<meta property="og:title" content="ADMIN — 충남대학교 컴퓨터인공지능학부">
+<meta property="og:description" content="웹과 AI를 직접 만들고 가르치는 충남대학교 컴퓨터인공지능학부 학술 동아리입니다.">
 <meta property="og:url" content="https://cnu-admin.com/">
 <meta property="og:image" content="https://cnu-admin.com/images/og-cover.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ADMIN — 충남대학교 컴퓨터융합학부 학술 동아리">
+<meta property="og:image:alt" content="ADMIN — 충남대학교 컴퓨터인공지능학부 학술 동아리">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://cnu-admin.com/">
@@ -23,7 +23,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" as="style" crossorigin
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="style.css">
+<!-- 서버가 CSS를 30일간 캐시합니다. style.css를 고치면 v 숫자를 올려 주세요. -->
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -43,6 +44,7 @@
     <p class="masthead__affil" data-site="affiliation"></p>
     <h1 class="masthead__name" data-site="name"></h1>
     <p class="masthead__tagline" data-site="tagline"></p>
+    <a class="btn masthead__cta" data-site-cta></a>
   </div>
 </header>
 
@@ -57,16 +59,50 @@
       <div class="col-body">
         <h2 class="h2" data-about="heading"></h2>
         <div class="prose" data-about="paragraphs"></div>
-        <dl class="activities" data-about="activities"></dl>
+        <ul class="letters" data-about="letters"></ul>
       </div>
     </div>
   </section>
 
-  <!-- 3. 임원진 -->
+  <!-- 3. 하는 일 -->
+  <section class="section section--activities" id="activities">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="label"><span class="label__num">02</span><span data-activities="label"></span></p>
+        <h2 class="h2" data-activities="heading"></h2>
+      </div>
+      <div class="activity-groups" data-activities="groups"></div>
+    </div>
+  </section>
+
+  <!-- 4. 올해 기록 -->
+  <section class="section section--events" id="events">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="label"><span class="label__num">03</span><span data-events="label"></span></p>
+        <h2 class="h2" data-events="heading"></h2>
+      </div>
+      <ol class="events" data-events="list"></ol>
+    </div>
+  </section>
+
+  <!-- 5. 성과 -->
+  <section class="section section--awards" id="awards">
+    <div class="wrap">
+      <div class="section__head">
+        <p class="label"><span class="label__num">04</span><span data-awards="label"></span></p>
+        <h2 class="h2" data-awards="heading"></h2>
+        <p class="section__note" data-awards="note"></p>
+      </div>
+      <ul class="awards" data-awards="list"></ul>
+    </div>
+  </section>
+
+  <!-- 6. 운영진 -->
   <section class="section section--members" id="members">
     <div class="wrap">
       <div class="section__head">
-        <p class="label"><span class="label__num">02</span><span data-members="label"></span></p>
+        <p class="label"><span class="label__num">05</span><span data-members="label"></span></p>
         <h2 class="h2" data-members="heading"></h2>
         <p class="section__note" data-members="note"></p>
       </div>
@@ -77,24 +113,27 @@
     </div>
   </section>
 
-  <!-- 4. 올해 행사 -->
-  <section class="section section--events" id="events">
+  <!-- 7. 가입 안내 -->
+  <section class="section section--join" id="join">
     <div class="wrap">
       <div class="section__head">
-        <p class="label"><span class="label__num">03</span><span data-events="label"></span></p>
-        <h2 class="h2" data-events="heading"></h2>
+        <p class="label"><span class="label__num">06</span><span data-join="label"></span></p>
+        <h2 class="h2" data-join="heading"></h2>
+        <p class="section__note" data-join="note"></p>
       </div>
-      <ul class="events" data-events="list"></ul>
+      <ol class="steps" data-join="steps"></ol>
+      <dl class="contact-list join__details" data-join="details"></dl>
+      <a class="btn" data-join-cta></a>
     </div>
   </section>
 
 </main>
 
-<!-- 5. 연락처 -->
+<!-- 8. 연락처 -->
 <footer class="footer" id="contact">
   <div class="wrap">
     <div class="section__head">
-      <p class="label"><span class="label__num">04</span><span data-contact="label"></span></p>
+      <p class="label"><span class="label__num">07</span><span data-contact="label"></span></p>
       <h2 class="h2 h2--footer" data-contact="heading"></h2>
       <p class="section__note" data-contact="note"></p>
     </div>

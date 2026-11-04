@@ -64,10 +64,29 @@
     return wrapper;
   }
 
+  /* 링크 하나 채우기. 바깥 주소는 새 탭으로 엽니다. */
+  function fillLink(a, link) {
+    a.textContent = link.label;
+    a.href = link.href;
+    if (/^https?:/.test(link.href)) { a.target = "_blank"; a.rel = "noopener"; }
+  }
+
+  /* "2026.11.21", "2026.05" 처럼 적힌 날짜가 끝나는 시각. 기간이면 시작일 기준입니다. */
+  function lastDay(text) {
+    const m = (text || "").match(/(\d{4})[.-](\d{1,2})(?:[.-](\d{1,2}))?/);
+    if (!m) return null;
+    const [, y, mo, d] = m.map(Number);
+    return new Date(y, d ? mo - 1 : mo, d || 0, 23, 59, 59);
+  }
+
   /* ── 1. 상단 ──────────────────────────────── */
   function renderSite(site) {
     bindText("site", site);
     document.title = `${site.name} — ${site.affiliation}`;
+
+    const cta = $("[data-site-cta]");
+    if (site.cta) fillLink(cta, site.cta);
+    else cta.remove();
 
     const list = $('[data-site="nav"]');
     if (!list) return;
@@ -87,11 +106,42 @@
     const prose = $('[data-about="paragraphs"]');
     about.paragraphs.forEach((text) => prose.appendChild(el("p", null, text)));
 
-    const dl = $('[data-about="activities"]');
-    about.activities.forEach((item) => dl.appendChild(row(item.title, item.desc)));
+    const letters = $('[data-about="letters"]');
+    about.letters.forEach((item) => {
+      const li = el("li", "letter");
+      li.appendChild(el("span", "letter__char", item.letter));
+      li.appendChild(el("h3", "letter__word", item.word));
+      li.appendChild(el("p", "letter__desc", item.desc));
+      letters.appendChild(li);
+    });
   }
 
-  /* ── 3. 임원진 (조직도) ──────────────────── */
+  /* ── 3. 하는 일 ───────────────────────────── */
+  function renderActivities(activities) {
+    bindText("activities", activities);
+
+    const box = $('[data-activities="groups"]');
+    activities.groups.forEach((group) => {
+      const wrap = el("div", "activity-group");
+      wrap.appendChild(el("h3", "activity-group__name", group.name));
+      const cards = el("ul", "activity-cards");
+      group.items.forEach((item) => {
+        const srcs = item.images ?? [item.image];
+        const li = el("li", srcs.length > 1 ? "activity-card activity-card--wide" : "activity-card");
+        const photos = el("div", "activity-card__photos");
+        photos.style.setProperty("--photos", srcs.length);
+        srcs.forEach((src) => photos.appendChild(figure(src, item.title)));
+        li.appendChild(photos);
+        li.appendChild(el("h4", "activity-card__title", item.title));
+        if (item.desc) li.appendChild(el("p", "activity-card__desc", item.desc));
+        cards.appendChild(li);
+      });
+      wrap.appendChild(cards);
+      box.appendChild(wrap);
+    });
+  }
+
+  /* ── 6. 운영진 (조직도) ──────────────────── */
   function person(p, cls) {
     const li = el("li", cls);
     const head = el("p", `${cls}__head`);
@@ -129,35 +179,66 @@
     });
   }
 
-  /* ── 4. 행사 ──────────────────────────────── */
-  /* 순서대로 크기가 달라집니다. data.js에서 size: "lg" | "side" | "md" | "sm"
-     을 직접 지정하면 그 값이 우선합니다. */
-  const EVENT_PATTERN = ["lg", "md", "md", "side", "md", "md"];
-
+  /* ── 4. 올해 기록 ─────────────────────────── */
   function renderEvents(events) {
     bindText("events", events);
 
+    const now = new Date();
     const list = $('[data-events="list"]');
-    events.list.forEach((ev, i) => {
-      const size = ev.size || EVENT_PATTERN[i % EVENT_PATTERN.length];
-      const li = el("li", `ev ev--${size}`);
+    events.list.forEach((ev) => {
+      const li = el("li", "ev");
+      const end = lastDay(ev.date);
 
-      li.appendChild(figure(ev.image, ev.title));
+      const when = el("div", "ev__when");
+      when.appendChild(el("span", "ev__date", ev.date));
+      if (end && end >= now) when.appendChild(el("span", "ev__soon", "예정"));
+      li.appendChild(when);
 
       const body = el("div", "ev__body");
-      const meta = el("div", "ev__meta");
-      meta.appendChild(el("span", "ev__date", ev.date));
-      if (ev.place) meta.appendChild(el("span", "ev__place", ev.place));
-      body.appendChild(meta);
       body.appendChild(el("h3", "ev__title", ev.title));
+      if (ev.place) body.appendChild(el("p", "ev__place", ev.place));
       if (ev.desc) body.appendChild(el("p", "ev__desc", ev.desc));
+      if (ev.image) body.appendChild(figure(ev.image, ev.title));
 
       li.appendChild(body);
       list.appendChild(li);
     });
   }
 
-  /* ── 5. 하단 ──────────────────────────────── */
+  /* ── 5. 성과 ──────────────────────────────── */
+  function renderAwards(awards) {
+    bindText("awards", awards);
+
+    const list = $('[data-awards="list"]');
+    awards.list.forEach((item) => {
+      const li = el("li", "award");
+      li.appendChild(el("span", "award__year", item.year));
+      li.appendChild(el("span", "award__title", item.title));
+      li.appendChild(el("span", "award__result", item.result));
+      list.appendChild(li);
+    });
+  }
+
+  /* ── 7. 가입 안내 ─────────────────────────── */
+  function renderJoin(join) {
+    bindText("join", join);
+
+    const steps = $('[data-join="steps"]');
+    join.steps.forEach((step, i) => {
+      const li = el("li", "step");
+      li.appendChild(el("span", "step__num", String(i + 1)));
+      li.appendChild(el("h3", "step__title", step.title));
+      li.appendChild(el("p", "step__desc", step.desc));
+      steps.appendChild(li);
+    });
+
+    const dl = $('[data-join="details"]');
+    join.details.forEach((item) => dl.appendChild(row(item.label, item.value, item.href)));
+
+    fillLink($("[data-join-cta]"), join.cta);
+  }
+
+  /* ── 8. 하단 ──────────────────────────────── */
   function renderContact(contact) {
     bindText("contact", contact);
 
@@ -180,7 +261,10 @@
 
   renderSite(DATA.site);
   renderAbout(DATA.about);
-  renderMembers(DATA.members);
+  renderActivities(DATA.activities);
   renderEvents(DATA.events);
+  renderAwards(DATA.awards);
+  renderMembers(DATA.members);
+  renderJoin(DATA.join);
   renderContact(DATA.contact);
 })();
